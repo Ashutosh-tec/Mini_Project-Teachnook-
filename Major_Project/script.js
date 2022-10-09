@@ -1,107 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Update</title>
-    <!-- link local stylesheet -->
-    <link rel="stylesheet" href="style.css">
-    <!-- font awesome cdn -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+let x=document.getElementsByClassName("notification");
+const timeElapsed = Date.now();
+const today = new Date(timeElapsed);
+const time = today.toUTCString();
+let day = "";
+// extracting day of today from time var
+for (let i = 0; i < time.length; i++) {
+    
+    day += time.charAt(i);
+    if (time.charAt(i) === ",") {
+        day = day.slice(0,-1);
+        i = time.length;
+    }
+  }
 
-    <!-- google fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@1,300;1,50">
-    <!-- link local javascript -->
-    <script src="./script.js" defer></script>
-</head>
-<body>
-    <!-- today's weather -->
-    <div class="card">
-        <div class="dateTime">
-        </div>
-        <div class="notification">
-        </div>
-        <div class="search-box">
-            <input class="search-txt" type="text" name="" placeholder="Type to search">
-            <button class="search-btn">
-                <i class="fas fa-search"></i>
-            </button>
-        </div>
-        <div class="weather load">
-            <h2 class="city">Loading....</h2>
-            <h1 class="temp"style="margin:-5px";></h1>
-            <div class="flex" style="margin:-16px";>
-            <img src="" alt="" class="icon"/>
-                <div class="description">
-                </div>
-            </div>
-            <div class="humidity"></div>
-            <div class="wind">
-            </div>
-        </div>
-    </div>
-    <br>
-    <!-- next 7 day's weather -->
-    <div class="card other">
+const list_day = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+document.querySelector('.dateTime').innerText = time 
+
+let weather = {
+    //openweathermap
+    apiKey:"5c3cd18cc13c1feb92f2cfef7d101d74",
+    //by city
+    fetchWeather: function(city){
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}`
+        ).then((response) => response.json() )
+        .then((data) => this.displayWeather(data) );
+        fetch(`https://pro.openweathermap.org/data/2.5/forecast/daily?q=${city}&cnt=7&appid=${this.apiKey}`
+        ).then((response) => response.json() )
+        .then((data) => this.otherWeather(data) );
+    },
+
+    //by geographical coordinates
+    fetchWeather2: function(lat, long){
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&units=metric&appid=${this.apiKey}`
+        ).then((response) => response.json() )
+        .then((data) => this.displayWeather(data) );
         
-        <div class="next1">
-            <div class="img_block" style="margin:-10px">
-            <img src="" alt="" class="icon1"/>
-            </div>
-            <h3 class="day1" style="margin:5px"></h3>
-            <a class="description1"></a>
-            <h5 class="temp1-max"style="margin:1.5px"></h5>
-            <h5 class="temp1-min"style="margin:1.5px"></h5>
-        </div>
-        <div class="next2">
-            <div class="img_block" style="margin:-10px">
-            <img src="" alt="" class="icon2"/>
-            </div>
-            <h3 class="day2" style="margin:5px"></h3>
-            <a class="description2"></a>
-            <h5 class="temp2-max"style="margin:1.5px"></h5>
-            <h5 class="temp2-min"style="margin:1.5px"></h5>
-        </div>
-        <div class="next3">
-            <div class="img_block" style="margin:-10px">
-            <img src="" alt="" class="icon3"/>
-            </div>
-            <h3 class="day3" style="margin:5px"></h3>
-            <a class="description3"></a>
-            <h5 class="temp3-max"style="margin:1.5px"></h5>
-            <h5 class="temp3-min"style="margin:1.5px"></h5>
-        </div>
-        <div class="next4">
-            <div class="img_block" style="margin:-10px">
-            <img src="" alt="" class="icon4"/>
-            </div>
-            <h3 class="day4" style="margin:5px"></h3>
-            <a class="description4"></a>
-            <h5 class="temp4-max"style="margin:1.5px"></h5>
-            <h5 class="temp4-min"style="margin:1.5px"></h5>
-        </div>
-        <div class="next5">
-            <div class="img_block" style="margin:-10px">
-            <img src="" alt="" class="icon5"/>
-            </div>
-            <h3 class="day5" style="margin:5px"></h3>
-            <a class="description5"></a>
-            <h5 class="temp5-max"style="margin:1.5px"></h5>
-            <h5 class="temp5-min"style="margin:1.5px"></h5>
-        </div>
-        <div class="next6">
-            <div class="img_block" style="margin:-10px">
-            <img src="" alt="" class="icon6"/>
-            </div>
-            <h3 class="day6" style="margin:5px"></h3>
-            <a class="description6"></a>
-            <h5 class="temp6-max"style="margin:1.5px"></h5>
-            <h5 class="temp6-min"style="margin:1.5px"></h5>
-        </div>
-    </div>
-</body>
-</html>
+    },
+
+    //for other 6 days
+    fetchWeather3: function(lat,long){
+        console.log(`https://pro.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${long}&cnt=7&APPID=${this.apiKey}`);
+        fetch(`https://pro.openweathermap.org/data/2.5/forecast/daily?lat=${lat}&lon=${long}&cnt=7&APPID=${this.apiKey}`
+        ).then((response) => response.json() )
+        .then((data) => this.otherWeather(data) );
+    },
+    //current weather
+    displayWeather: function(data) {
+        
+        let { name } = data;
+        let { icon, description } = data.weather[0];
+        let { temp, humidity } = data.main;
+        if (temp > 273){
+            temp = (temp - 273).toFixed(2);
+        }
+        const { speed } = data.wind;
+        document.querySelector(".city").innerText = `Today's Weather in ${name}`;
+        document.querySelector(".icon").src="https://openweathermap.org/img/wn/" + icon + "@2x.png";
+        document.querySelector(".description").innerText = description;
+        document.querySelector(".temp").innerText = temp + "°C";
+        document.querySelector(".humidity").innerText = "Humidity: " + humidity + "%";
+        document.querySelector(".wind").innerText = "Speed: " + speed +"km/h";
+        document.body.style.backgroundImage = "url('https://source.unsplash.com/1500x1000/?" + name +"')";
+   
+    },
+    //for other 6 days
+    otherWeather: function(data){
+        let i = 1;
+        
+        for(i;i<7;i++){
+            let idx = list_day.indexOf(day);
+            idx=(idx + i) % 7;
+            document.querySelector(`.icon${i}`).src="https://openweathermap.org/img/wn/" + data.list[i].weather[0].icon + "@2x.png";
+            document.querySelector(`.day${i}`).innerText = list_day[idx];
+            document.querySelector(`.description${i}`).innerText = data.list[i].weather[0].description;
+            document.querySelector(`.temp${i}-max`).innerText = `Max: ${(data.list[i].temp.max - 273).toFixed(2)+"°C"}`;
+            document.querySelector(`.temp${i}-min`).innerText = `Min: ${(data.list[i].temp.min - 273).toFixed(2)+"°C"}`;
+        }
+    },
+    search: function(){ //take name of city
+        this.fetchWeather(document.querySelector(".search-txt").value);
+    }
+};
+document.querySelector(".search-box button").addEventListener("click",function(){//set click funtion to search button
+    
+    weather.search();
+});
+document.querySelector(".search-txt").addEventListener("keyup",function(event){ //work when pressing Enter Key
+    if (event.key == "Enter"){
+        weather.search();
+    }
+})
+// main function
+async function fetchLoc(){
+    
+    if ('geolocation' in navigator){ //check location 
+        navigator.geolocation.getCurrentPosition(setPosition, showError);
+    }else{
+        document.querySelector(".dateTime").innerHTML = time; //show time, date, day
+    }
+
+    function setPosition(position){
+        
+        let lat = position.coords.latitude;
+        let long = position.coords.longitude;
+
+        weather.fetchWeather2(lat, long);
+        weather.fetchWeather3(lat, long);
+    }
+
+    function showError(error){
+        //if location can't be accessed, show weather of Delhi
+        weather.fetchWeather("Delhi");
+        document.querySelector(".notification").innerHTML = "Your location can't be accessed.";
+    }
+}
+//call function
+fetchLoc();
