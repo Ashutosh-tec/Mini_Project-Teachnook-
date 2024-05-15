@@ -18,7 +18,7 @@ document.querySelector('.dateTime').innerText = time
 
 let weather = {
     //openweathermap
-    apiKey:"5c3cd18cc13c1feb92f2cfef7d101d74",
+    apiKey:" YOUR API KEY ",
     //by city
     fetchWeather: function(city){
         fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKey}`
